@@ -30,6 +30,10 @@ Link to the Swagger API documentation:
 To build and run this application on your local machine, type "docker-compose up"
 under the project root directory.
 
+The application runs with the following Docker containers:
+MySQl, ZooKeeper, Kafka, the Url Shortener API, the Url Shortener Statistics API, 
+and the Testing Webpage
+
 Go to http://localhost:3000 to test the Url Shortener API and Url Shortener Statistics API.
 
 ## Coming soon
