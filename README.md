@@ -30,7 +30,7 @@ Link to the Swagger API documentation:
 To build and run this application on your local machine, type "docker-compose up"
 under the project root directory.
 
-Go to http://localhost:3000 to testing the Url Shortener API and Url Shortener Statistics API.
+Go to http://localhost:3000 to test the Url Shortener API and Url Shortener Statistics API.
 
 ## Coming soon
 - authenticate and authorize API requests using jwt
