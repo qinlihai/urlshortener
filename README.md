@@ -32,7 +32,7 @@ under the project root directory.
 
 Go to http://localhost:3000 to test the Url Shortener API and Url Shortener Statistics API.
 
-##Docker Containers
+## Docker Containers
 The application runs with the following Docker containers:
 - MySQl
 - ZooKeeper (required by Kafka)
