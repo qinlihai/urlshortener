@@ -1,24 +1,36 @@
 package com.ebirdspace.urlshortenerstatistics.service;
 
+import com.ebirdspace.urlshortenerstatistics.dto.UrlStatisticsDTO;
+import com.ebirdspace.urlshortenerstatistics.mapper.UrlStatisticsMapper;
 import com.ebirdspace.urlshortenerstatistics.model.UrlStatistics;
 import com.ebirdspace.urlshortenerstatistics.repository.UrlStatisticsRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @Service
 public class UrlStatisticsService {
 
-  @Autowired
-  private UrlStatisticsRepository repository;
+  private final UrlStatisticsRepository repository;
+  private final UrlStatisticsMapper urlStatisticsMapper;
 
-  public List<UrlStatistics> getAllStatistics() {
-    return repository.findAll();
+  public List<UrlStatisticsDTO> getAllStatistics() {
+    return repository.findAll().stream().
+        map(urlStatisticsMapper::urlStatisticsToUrlStatisticsDTO).collect(
+            Collectors.toList());
   }
 
-  public UrlStatistics getStatisticsByShortCode(String shortCode) {
-    return repository.findByShortCode(shortCode);
+  public UrlStatisticsDTO getStatisticsByShortCode(String shortCode) {
+    Optional<UrlStatistics> urlStatistics = repository.findByShortCode(shortCode);
+    if(urlStatistics.isPresent()) {
+      return urlStatisticsMapper.urlStatisticsToUrlStatisticsDTO(urlStatistics.get());
+    } else {
+      return null;
+    }
   }
 }
 

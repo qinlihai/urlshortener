@@ -7,10 +7,13 @@ const App = () => {
   const [shortCode, setShortCode] = useState('');
   const [statistics, setStatistics] = useState(null);
 
+  const urlshortenerApiHost = import.meta.env.VITE_URLSHORTENER_API_URL;
+  const urlshortenerStatisticsApiHost = import.meta.env.VITE_URLSHORTENER_STATISTICS_API_URL;
+
   const handleShortenUrl = async () => {
     try {
-      const response = await axios.post('http://localhost:8080/api/v1/shorten', originalUrl, {
-        headers: { 'Content-Type': 'text/plain' }
+      const response = await axios.post(urlshortenerApiHost + '/api/v1/shorten', {'originalUrl': originalUrl}, {
+        headers: { 'Content-Type': 'application/json' }
       });
       setShortenedUrl(response.data.shortUrl);
     } catch (error) {
@@ -20,7 +23,9 @@ const App = () => {
 
   const handleGetStatistics = async () => {
     try {
-      const response = await axios.get(`http://localhost:8081/api/v1/urlstatistics/${shortCode}`);
+      const response = await axios.post(urlshortenerStatisticsApiHost + `/api/v1/urlstatistics`, {'shortCode': shortCode}, {
+        headers: { 'Content-Type': 'application/json' }
+      });
       setStatistics(response.data);
     } catch (error) {
       console.error('Error retrieving statistics:', error);

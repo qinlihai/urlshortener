@@ -1,0 +1,29 @@
+version: '3.7'
+
+services:
+  urlshortener-service:
+    build: ./urlshortener-service
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/urlshortener?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: changemenow
+
+  urlshortener-statistics:
+    build: ./urlshortener-statistics
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/urlshortener-statistics?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: changemenow
+
+  urlshortener-client:
+    build: ./urlshortener-client
+    ports:
+      - "3000:3000"
+    depends_on:
+      - urlshortener-service
+      - urlshortener-statistics
+

@@ -1,6 +1,8 @@
 package com.ebirdspace.urlshortenerservice.config;
 
+import com.ebirdspace.urlshortenerservice.dto.StatisticsKafkaMessage;
 import java.util.Map;
+import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +14,8 @@ import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
+import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer;
+import org.springframework.kafka.support.serializer.JsonDeserializer;
 
 @EnableKafka
 @Configuration
@@ -25,25 +29,26 @@ public class KafkaConfig {
   }
 
   @Bean
-  public ProducerFactory<String, String> producerFactory() {
+  public ProducerFactory<String, Object> producerFactory() {
     Map<String, Object> configProps = kafkaProperties.buildProducerProperties(null);
     return new DefaultKafkaProducerFactory<>(configProps);
   }
 
   @Bean
-  public KafkaTemplate<String, String> kafkaTemplate() {
+  public KafkaTemplate<String, Object> kafkaTemplate() {
     return new KafkaTemplate<>(producerFactory());
   }
 
   @Bean
-  public ConsumerFactory<String, String> consumerFactory() {
+  public ConsumerFactory<String, StatisticsKafkaMessage> consumerFactory() {
     Map<String, Object> configProps = kafkaProperties.buildConsumerProperties(null);
-    return new DefaultKafkaConsumerFactory<>(configProps);
+    return new DefaultKafkaConsumerFactory<>(configProps, new StringDeserializer(),
+        new ErrorHandlingDeserializer<>(new JsonDeserializer<>(StatisticsKafkaMessage.class)));
   }
 
   @Bean
-  public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory() {
-    ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
+  public ConcurrentKafkaListenerContainerFactory<String, StatisticsKafkaMessage> kafkaListenerContainerFactory() {
+    ConcurrentKafkaListenerContainerFactory<String, StatisticsKafkaMessage> factory = new ConcurrentKafkaListenerContainerFactory<>();
     factory.setConsumerFactory(consumerFactory());
     return factory;
   }

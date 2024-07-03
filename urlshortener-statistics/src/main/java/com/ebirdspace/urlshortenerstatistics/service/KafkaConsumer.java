@@ -1,12 +1,19 @@
 package com.ebirdspace.urlshortenerstatistics.service;
 
+import com.ebirdspace.urlshortenerstatistics.dto.StatisticsKafkaMessage;
 import com.ebirdspace.urlshortenerstatistics.model.UrlStatistics;
 import com.ebirdspace.urlshortenerstatistics.repository.UrlStatisticsRepository;
+import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
+
 @Service
 public class KafkaConsumer {
+
+  private static final Logger logger = LoggerFactory.getLogger(KafkaConsumer.class);
 
   private final UrlStatisticsRepository urlStatisticsRepository;
 
@@ -17,12 +24,14 @@ public class KafkaConsumer {
 
   @KafkaListener(topics = "${kafka.urlshortener.topic-name}",
       groupId = "${spring.kafka.consumer.group-id}")
-  public void consume(String message) {
+  public void consume(StatisticsKafkaMessage message) {
 
-    if(message != null && message.startsWith("Redirect url:")) {
-      String shortCode = message.substring("Redirect url: ".length(), message.indexOf(" to "));
-      UrlStatistics statistics = urlStatisticsRepository.findByShortCode(shortCode);
-      if(statistics != null) {
+    if(message != null) {
+      String shortCode = message.getShortCode();
+      Optional<UrlStatistics> statisticsOptional = urlStatisticsRepository.findByShortCode(shortCode);
+      UrlStatistics statistics;
+      if(statisticsOptional.isPresent()) {
+        statistics = statisticsOptional.get();
         statistics.setClickCount(statistics.getClickCount() + 1);
       }else {
         statistics = new UrlStatistics();
@@ -32,6 +41,6 @@ public class KafkaConsumer {
       urlStatisticsRepository.save(statistics);
     }
 
-    System.out.println("Consumed message: " + message);
+    logger.debug("Consumed message: " + message);
   }
 }

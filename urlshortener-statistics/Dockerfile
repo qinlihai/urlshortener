@@ -1,5 +1,5 @@
 # Use an official OpenJDK runtime as a parent image
-FROM openjdk:17-jdk-slim
+FROM openjdk:17-jdk-slim AS builder
 
 # Set the working directory in the container
 WORKDIR /app
@@ -8,10 +8,18 @@ WORKDIR /app
 COPY . .
 
 # Package the application
-RUN ./mvnw package
+RUN ./mvnw package -DskipTests
+
+FROM openjdk:17-jdk-slim
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy the JAR file from the builder stage
+COPY --from=builder /app/target/urlshortener-statistics-*.jar /app/urlshortener-statistics.jar
 
 # Make port 8081 available to the world outside this container
 EXPOSE 8081
 
 # Run the jar file
-CMD ["java", "-jar", "target/urlshortener-statistics-0.0.1-SNAPSHOT.jar"]
+CMD ["java", "-jar", "urlshortener-statistics.jar"]
