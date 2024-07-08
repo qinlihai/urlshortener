@@ -14,6 +14,9 @@ public class UrlUtil {
     if (url == null) {
       return false;
     }
+    if(url.length() >= Constants.URL_MAX_LENGTH) {
+      return false;
+    }
     return URL_PATTERN.matcher(url).matches();
   }
 

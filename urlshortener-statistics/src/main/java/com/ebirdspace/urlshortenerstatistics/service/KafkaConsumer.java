@@ -23,8 +23,10 @@ public class KafkaConsumer {
   }
 
   @KafkaListener(topics = "${kafka.urlshortener.topic-name}",
-      groupId = "${spring.kafka.consumer.group-id}")
+      groupId = "${spring.kafka.consumer.group-id}", autoStartup = "true")
   public void consume(StatisticsKafkaMessage message) {
+
+    logger.info("enter consumer listener");
 
     if(message != null) {
       String shortCode = message.getShortCode();
@@ -41,6 +43,6 @@ public class KafkaConsumer {
       urlStatisticsRepository.save(statistics);
     }
 
-    logger.debug("Consumed message: " + message);
+    logger.info("Consumed message: " + message.getOriginalUrl());
   }
 }

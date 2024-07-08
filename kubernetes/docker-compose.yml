@@ -33,19 +33,19 @@ services:
     depends_on:
       - zookeeper
 
-#  jobmanager:
-#    image: flink:latest
-#    command: jobmanager
-#    ports:
-#      - "8082:8082"
-#    environment:
-#      - JOB_MANAGER_RPC_ADDRESS=jobmanager
-#
-#  taskmanager:
-#    image: flink:latest
-#    command: taskmanager
-#    depends_on:
-#      - jobmanager
+  jobmanager:
+    image: flink:latest
+    command: jobmanager
+    ports:
+      - "8082:8082"
+    environment:
+      - JOB_MANAGER_RPC_ADDRESS=jobmanager
+
+  taskmanager:
+    image: flink:latest
+    command: taskmanager
+    depends_on:
+      - jobmanager
 
   urlshortener-service:
     build: ./urlshortener-service

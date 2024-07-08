@@ -52,9 +52,6 @@ public class UrlController {
     Optional<Url> urlOptional = urlService.getOriginalUrl(shortCode);
     if (urlOptional.isPresent()) {
       String originalUrl = urlOptional.get().getOriginalUrl();
-      if(!originalUrl.contains("http:") && !originalUrl.contains("https:")) {
-        originalUrl = "http://" + originalUrl;
-      }
       return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(originalUrl)).build();
     } else {
       return ResponseEntity.notFound().build();
