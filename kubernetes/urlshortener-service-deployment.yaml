@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    urlshortener: urlshortener-service
+  name: urlshortener-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      urlshortener: urlshortener-service
+  template:
+    metadata:
+      labels:
+        urlshortener: urlshortener-service
+    spec:
+      containers:
+        - env:
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: changemenow
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:mysql://mysql:3306/urlshortener?createDatabaseIfNotExist=true
+            - name: SPRING_DATASOURCE_USERNAME
+              value: root
+          image: urlshortener-service
+          name: urlshortener-service
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+      restartPolicy: Always

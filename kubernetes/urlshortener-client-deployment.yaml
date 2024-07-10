@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    urlshortener: urlshortener-client
+  name: urlshortener-client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      urlshortener: urlshortener-client
+  template:
+    metadata:
+      labels:
+        urlshortener: urlshortener-client
+    spec:
+      containers:
+        - image: urlshortener-client
+          name: urlshortener-client
+          ports:
+            - containerPort: 3000
+              protocol: TCP
+      restartPolicy: Always

@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    urlshortener: jobmanager
+  name: jobmanager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      urlshortener: jobmanager
+  template:
+    metadata:
+      labels:
+        urlshortener: jobmanager
+    spec:
+      containers:
+        - args:
+            - jobmanager
+          env:
+            - name: JOB_MANAGER_RPC_ADDRESS
+              value: jobmanager
+          image: flink:latest
+          name: jobmanager
+          ports:
+            - containerPort: 8082
+              protocol: TCP
+      restartPolicy: Always

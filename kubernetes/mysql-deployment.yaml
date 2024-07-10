@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    urlshortener: mysql
+  name: mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      urlshortener: mysql
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        urlshortener: mysql
+    spec:
+      containers:
+        - env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: urlshortener-secret
+                  key: MYSQL_ROOT_PASSWORD
+          image: mysql:5.7
+          name: mysql
+          ports:
+            - containerPort: 3306
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: mysql-data
+      restartPolicy: Always
+      volumes:
+        - name: mysql-data
+          persistentVolumeClaim:
+            claimName: mysql-data

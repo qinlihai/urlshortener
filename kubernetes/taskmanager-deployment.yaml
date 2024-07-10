@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    urlshortener: taskmanager
+  name: taskmanager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      urlshortener: taskmanager
+  template:
+    metadata:
+      labels:
+        urlshortener: taskmanager
+    spec:
+      containers:
+        - args:
+            - taskmanager
+          image: flink:latest
+          name: taskmanager
+      restartPolicy: Always
