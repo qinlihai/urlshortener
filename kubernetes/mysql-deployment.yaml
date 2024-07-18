@@ -19,10 +19,12 @@ spec:
       containers:
         - env:
             - name: MYSQL_ROOT_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: urlshortener-secret
-                  key: MYSQL_ROOT_PASSWORD
+              value: changemenow
+#              for unknow reason, the secret was read as $'changemenow'\n
+#              valueFrom:
+#                secretKeyRef:
+#                  name: urlshortener-secret
+#                  key: MYSQL_ROOT_PASSWORD
           image: mysql:5.7
           name: mysql
           ports:
@@ -34,5 +36,5 @@ spec:
       restartPolicy: Always
       volumes:
         - name: mysql-data
-          persistentVolumeClaim:
-            claimName: mysql-data
+#          persistentVolumeClaim:
+#            claimName: local-pvc
