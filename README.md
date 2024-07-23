@@ -25,12 +25,19 @@ Link to the Swagger API documentation:
 - Springdoc OpenAPI 2.5.0
 - Node 16
 - Spring for Apache Kafka 3.2.0
+- Resillience4J
+- jwt for authentication
+- Lombok
+- MapStruct
 
 ## Build and Deployment
 To build and run this application on your local machine, type "docker-compose up"
 under the project root directory.
 
 Go to http://localhost:3000 to test the Url Shortener API and Url Shortener Statistics API.
+
+Kubernetes deployment files are located under /kubernetes. For local development, use the ***-node-port 
+service file to expose MySQL and Kafka services to your app.
 
 ## Docker Containers
 The application runs with the following Docker containers:
@@ -42,8 +49,6 @@ The application runs with the following Docker containers:
 - the Testing Webpage (React JS with hooks. Vite for packaging)
 
 ## Coming soon
-- authenticate and authorize API requests using jwt
-- Configuration and development for High availability and resilience.
 - Data engineering using Apache Flink
 
 ## Contact
